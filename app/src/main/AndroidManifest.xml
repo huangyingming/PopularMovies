@@ -36,6 +36,7 @@
         <provider
             android:authorities="com.example.android.popularmovies"
             android:name=".data.MovieProvider" />
+        <service android:name=".service.PopularMoviesService"/>
     </application>
 
 </manifest>

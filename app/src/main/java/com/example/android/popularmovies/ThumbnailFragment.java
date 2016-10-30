@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.android.popularmovies.data.MovieContract;
+import com.example.android.popularmovies.service.PopularMoviesService;
 
 /**
  * Created by aaa on 2016/08/17.
@@ -112,8 +113,10 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
 
         String how_to_sort = Utility.getHowToSort(getActivity());
 
-        FetchMovieTask movieTask = new FetchMovieTask(getActivity());
-        movieTask.execute(how_to_sort);
+        Intent intent = new Intent(getActivity(), PopularMoviesService.class);
+        intent.putExtra(PopularMoviesService.SORT_EXTRA,
+                how_to_sort);
+        getActivity().startService(intent);
     }
     /*
     @Override
