@@ -22,13 +22,19 @@ public class MovieContract {
     // looking at weather data. content://com.example.android.popularmovies/givemeroot/ will fail,
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
-    public static final String PATH_POPULAR = "popular";
-    public static final String PATH_TOP_RATED = "top_rated";
+    public static final String PATH_MOVIE = "movie";
+
     public static final String PATH_FAVORITE = "favorite";
 
     public static class MovieEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
 
-        public static final String TABLE_NAME = "TBA";
+        public static final String TABLE_NAME = "movie";
         public static final String COLUMN_MOVIE_ID = "movie_id";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_OVERVIEW = "overview";
@@ -36,40 +42,12 @@ public class MovieContract {
         public static final String COLUMN_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_THUMBNAIL = "thumbnail";
 
-        public static Uri buildMovieUri(String how_to_sort, long id){
-            Uri content_uri = BASE_CONTENT_URI.buildUpon().appendPath(how_to_sort).build();
-            return ContentUris.withAppendedId(content_uri, id);
-        }
-
-    }
-    public static final class PopularEntry extends MovieEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_POPULAR;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_POPULAR;
-
-        public static final String TABLE_NAME = "popular";
-
-        public static Uri buildPopularUri(long id) {
+        public static Uri buildMovieUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-    }
-    public static final class TopRatedEntry extends MovieEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TOP_RATED).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TOP_RATED;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TOP_RATED;
 
-        public static final String TABLE_NAME = "top_rated";
-
-        public static Uri buildTopRatedUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
     }
+
     public static final class FavoriteEntry extends MovieEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITE).build();

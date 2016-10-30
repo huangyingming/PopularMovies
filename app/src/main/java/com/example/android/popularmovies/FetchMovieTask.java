@@ -7,8 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.android.popularmovies.data.MovieContract.PopularEntry;
-import com.example.android.popularmovies.data.MovieContract.TopRatedEntry;
+import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,10 +31,8 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
 
 
     private Context mContext;
-    private String mSort;
-    public FetchMovieTask(Context context, String how_to_sort){
+    public FetchMovieTask(Context context){
         mContext = context;
-        mSort = how_to_sort;
     }
 
 
@@ -66,36 +63,22 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                 double vote_average = movieInfo.getDouble(TMD_VOTE_AVERAGE);
 
                 ContentValues movieValues = new ContentValues();
+                movieValues.put(MovieEntry.COLUMN_MOVIE_ID, id);
+                movieValues.put(MovieEntry.COLUMN_TITLE, original_title);
+                movieValues.put(MovieEntry.COLUMN_OVERVIEW, overview);
+                movieValues.put(MovieEntry.COLUMN_YEAR, release_date);
+                movieValues.put(MovieEntry.COLUMN_VOTE_AVERAGE, vote_average);
+                movieValues.put(MovieEntry.COLUMN_THUMBNAIL, poster_path);
 
-                if(mSort.equals("popular")){
-                    movieValues.put(PopularEntry.COLUMN_MOVIE_ID, id);
-                    movieValues.put(PopularEntry.COLUMN_TITLE, original_title);
-                    movieValues.put(PopularEntry.COLUMN_OVERVIEW, overview);
-                    movieValues.put(PopularEntry.COLUMN_YEAR, release_date);
-                    movieValues.put(PopularEntry.COLUMN_VOTE_AVERAGE, vote_average);
-                    movieValues.put(PopularEntry.COLUMN_THUMBNAIL, poster_path);
-                }else {
-                    movieValues.put(TopRatedEntry.COLUMN_MOVIE_ID, id);
-                    movieValues.put(TopRatedEntry.COLUMN_TITLE, original_title);
-                    movieValues.put(TopRatedEntry.COLUMN_OVERVIEW, overview);
-                    movieValues.put(TopRatedEntry.COLUMN_YEAR, release_date);
-                    movieValues.put(TopRatedEntry.COLUMN_VOTE_AVERAGE, vote_average);
-                    movieValues.put(TopRatedEntry.COLUMN_THUMBNAIL, poster_path);
-                }
                 cVVector.add(movieValues);
             }
-            Log.d(LOG_TAG, "FetchMovieTask mSort. " + mSort);
             int inserted = 0;
 
             if(cVVector.size() > 0){
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
-                if(mSort.equals("popular")){
-                    inserted = mContext.getContentResolver().bulkInsert(PopularEntry.CONTENT_URI, cvArray);
-
-                }else{
-                    inserted = mContext.getContentResolver().bulkInsert(TopRatedEntry.CONTENT_URI, cvArray);
-                }
+                mContext.getContentResolver().delete(MovieEntry.CONTENT_URI, null, null);
+                inserted = mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
             }
             Log.d(LOG_TAG, "Debugging. " + inserted + " Inserted");
 

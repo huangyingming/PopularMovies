@@ -85,9 +85,8 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
                                     int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if(cursor != null){
-                    String how_to_sort = Utility.getHowToSort(getActivity());
                     Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(MovieContract.MovieEntry.buildMovieUri(how_to_sort,
+                            .setData(MovieContract.MovieEntry.buildMovieUri(
                                     cursor.getLong(COL_ID)));
                     startActivity(intent);
 
@@ -113,8 +112,7 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
 
         String how_to_sort = Utility.getHowToSort(getActivity());
 
-
-        FetchMovieTask movieTask = new FetchMovieTask(getActivity(),how_to_sort);
+        FetchMovieTask movieTask = new FetchMovieTask(getActivity());
         movieTask.execute(how_to_sort);
     }
     /*
@@ -130,12 +128,10 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
 
         String sortOrder = MovieContract.MovieEntry._ID + " ASC";
         Uri uri;
-        if(how_to_sort.equals("popular")){
-            uri = MovieContract.PopularEntry.CONTENT_URI;
-        }else if(how_to_sort.equals("top_rated")){
-            uri = MovieContract.TopRatedEntry.CONTENT_URI;
-        }else{
+        if(how_to_sort.equals("favorite")){
             uri = MovieContract.FavoriteEntry.CONTENT_URI;
+        }else{
+            uri = MovieContract.MovieEntry.CONTENT_URI;
         }
         return new CursorLoader(getActivity(),
                 uri,

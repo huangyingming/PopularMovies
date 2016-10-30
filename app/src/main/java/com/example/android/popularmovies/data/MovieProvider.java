@@ -15,10 +15,8 @@ public class MovieProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MovieDbHelper mOpenHelper;
 
-    static final int POPULAR = 100;
-    static final int POPULAR_WITH_ID = 101;
-    static final int TOP_RATED = 200;
-    static final int TOP_RATED_WITH_ID = 201;
+    static final int MOVIE = 100;
+    static final int MOVIE_WITH_ID = 101;
     static final int FAVORITE = 300;
     static final int FAVORITE_WITH_ID = 301;
 
@@ -26,10 +24,8 @@ public class MovieProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, MovieContract.PATH_POPULAR, POPULAR);
-        matcher.addURI(authority, MovieContract.PATH_POPULAR + "/#", POPULAR_WITH_ID);
-        matcher.addURI(authority, MovieContract.PATH_TOP_RATED + "/#", TOP_RATED_WITH_ID);
-        matcher.addURI(authority, MovieContract.PATH_TOP_RATED, TOP_RATED);
+        matcher.addURI(authority, MovieContract.PATH_MOVIE, MOVIE);
+        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/#", MOVIE_WITH_ID);
         matcher.addURI(authority, MovieContract.PATH_FAVORITE, FAVORITE);
         matcher.addURI(authority, MovieContract.PATH_FAVORITE + "/#", FAVORITE_WITH_ID);
 
@@ -45,14 +41,10 @@ public class MovieProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch(match){
-            case POPULAR:
-                return MovieContract.PopularEntry.CONTENT_TYPE;
-            case POPULAR_WITH_ID:
-                return MovieContract.PopularEntry.CONTENT_ITEM_TYPE;
-            case TOP_RATED:
-                return MovieContract.TopRatedEntry.CONTENT_TYPE;
-            case TOP_RATED_WITH_ID:
-                return MovieContract.TopRatedEntry.CONTENT_ITEM_TYPE;
+            case MOVIE:
+                return MovieContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_WITH_ID:
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             case FAVORITE:
                 return MovieContract.FavoriteEntry.CONTENT_TYPE;
             case FAVORITE_WITH_ID:
@@ -67,9 +59,9 @@ public class MovieProvider extends ContentProvider {
                         String sortOrder ){
         Cursor retCursor;
         switch(sUriMatcher.match(uri)){
-            case POPULAR: {
+            case MOVIE: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        MovieContract.PopularEntry.TABLE_NAME,
+                        MovieContract.MovieEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -79,34 +71,11 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
-            case POPULAR_WITH_ID: {
+            case MOVIE_WITH_ID: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        MovieContract.PopularEntry.TABLE_NAME,
+                        MovieContract.MovieEntry.TABLE_NAME,
                         projection,
-                        MovieContract.PopularEntry._ID + " = ?",
-                        new String[] {String.valueOf(ContentUris.parseId(uri))},
-                        null,
-                        null,
-                        sortOrder);
-                break;
-            }
-            case TOP_RATED: {
-                retCursor =  mOpenHelper.getReadableDatabase().query(
-                        MovieContract.TopRatedEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            case TOP_RATED_WITH_ID: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MovieContract.TopRatedEntry.TABLE_NAME,
-                        projection,
-                        MovieContract.TopRatedEntry._ID + " = ?",
+                        MovieContract.MovieEntry._ID + " = ?",
                         new String[] {String.valueOf(ContentUris.parseId(uri))},
                         null,
                         null,
@@ -149,18 +118,10 @@ public class MovieProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case POPULAR: {
-                long _id = db.insert(MovieContract.PopularEntry.TABLE_NAME, null, values);
+            case MOVIE: {
+                long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
                 if (_id > 0)
-                    returnUri = MovieContract.PopularEntry.buildPopularUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                break;
-            }
-            case TOP_RATED: {
-                long _id = db.insert(MovieContract.TopRatedEntry.TABLE_NAME, null, values);
-                if (_id > 0)
-                    returnUri = MovieContract.TopRatedEntry.buildTopRatedUri(_id);
+                    returnUri = MovieContract.MovieEntry.buildMovieUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -186,22 +147,13 @@ public class MovieProvider extends ContentProvider {
         int rowsDeleted;
         if(null == selection) selection = "1";
         switch(match){
-            case POPULAR:
+            case MOVIE:
                 rowsDeleted = db.delete(
-                        MovieContract.PopularEntry.TABLE_NAME, selection, selectionArgs);
+                        MovieContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case POPULAR_WITH_ID:
-                rowsDeleted = db.delete(MovieContract.PopularEntry.TABLE_NAME,
-                        MovieContract.PopularEntry._ID + " = ?",
-                        new String[]{String.valueOf(ContentUris.parseId(uri))});
-                break;
-            case TOP_RATED:
-                rowsDeleted = db.delete(
-                        MovieContract.TopRatedEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            case TOP_RATED_WITH_ID:
-                rowsDeleted = db.delete(MovieContract.TopRatedEntry.TABLE_NAME,
-                        MovieContract.TopRatedEntry._ID + " = ?",
+            case MOVIE_WITH_ID:
+                rowsDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,
+                        MovieContract.MovieEntry._ID + " = ?",
                         new String[]{String.valueOf(ContentUris.parseId(uri))});
                 break;
             case FAVORITE:
@@ -230,24 +182,14 @@ public class MovieProvider extends ContentProvider {
         int rowsUpdated;
 
         switch(match){
-            case POPULAR:
-                rowsUpdated = db.update(MovieContract.PopularEntry.TABLE_NAME, values, selection,
+            case MOVIE:
+                rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
-            case POPULAR_WITH_ID:
-                rowsUpdated = db.update(MovieContract.PopularEntry.TABLE_NAME,
+            case MOVIE_WITH_ID:
+                rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME,
                         values,
-                        MovieContract.PopularEntry._ID + " = ?",
-                        new String[] {String.valueOf(ContentUris.parseId(uri))});
-                break;
-            case TOP_RATED:
-                rowsUpdated = db.update(MovieContract.TopRatedEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
-                break;
-            case TOP_RATED_WITH_ID:
-                rowsUpdated = db.update(MovieContract.TopRatedEntry.TABLE_NAME,
-                        values,
-                        MovieContract.TopRatedEntry._ID + " = ?",
+                        MovieContract.MovieEntry._ID + " = ?",
                         new String[] {String.valueOf(ContentUris.parseId(uri))});
                 break;
             case FAVORITE:
@@ -275,11 +217,8 @@ public class MovieProvider extends ContentProvider {
         String tableName;
 
         switch(match){
-            case POPULAR:
-                tableName = MovieContract.PopularEntry.TABLE_NAME;
-                break;
-            case TOP_RATED:
-                tableName = MovieContract.TopRatedEntry.TABLE_NAME;
+            case MOVIE:
+                tableName = MovieContract.MovieEntry.TABLE_NAME;
                 break;
             case FAVORITE:
                 tableName = MovieContract.FavoriteEntry.TABLE_NAME;

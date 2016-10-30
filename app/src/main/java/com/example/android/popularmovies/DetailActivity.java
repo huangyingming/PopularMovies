@@ -66,6 +66,7 @@ public class DetailActivity extends ActionBarActivity{
         private static final String LOG_TAG = DetailFragment.class.getSimpleName();
         private static final int DETAIL_LOADER = 0;
         private static final String[] MOVIE_COLUMNS = {
+                MovieContract.MovieEntry._ID,
                 MovieContract.MovieEntry.COLUMN_MOVIE_ID,
                 MovieContract.MovieEntry.COLUMN_TITLE,
                 MovieContract.MovieEntry.COLUMN_OVERVIEW,
@@ -73,12 +74,13 @@ public class DetailActivity extends ActionBarActivity{
                 MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE,
                 MovieContract.MovieEntry.COLUMN_THUMBNAIL
         };
-        private static final int COL_MOVIE_ID = 0;
-        private static final int COL_TITLE = 1;
-        private static final int COL_OVERVIEW = 2;
-        private static final int COL_YEAR = 3;
-        private static final int COL_VOTE_AVERAGE = 4;
-        private static final int COL_THUMBNAIL = 5;
+        private static final int COL_ID = 0;
+        private static final int COL_MOVIE_ID = 1;
+        private static final int COL_TITLE = 2;
+        private static final int COL_OVERVIEW = 3;
+        private static final int COL_YEAR = 4;
+        private static final int COL_VOTE_AVERAGE = 5;
+        private static final int COL_THUMBNAIL = 6;
 
         public DetailFragment() {
         }
@@ -117,7 +119,7 @@ public class DetailActivity extends ActionBarActivity{
 
 
 
-
+            String id = Integer.toString(data.getInt(COL_ID));
             String movieId = Integer.toString(data.getInt(COL_MOVIE_ID));
             String title = data.getString(COL_TITLE);
             String overview = data.getString(COL_OVERVIEW);
