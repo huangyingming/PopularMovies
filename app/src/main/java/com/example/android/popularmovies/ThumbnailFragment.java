@@ -19,7 +19,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.android.popularmovies.data.MovieContract;
-import com.example.android.popularmovies.service.PopularMoviesService;
+import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
 /**
  * Created by aaa on 2016/08/17.
@@ -110,13 +110,16 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
         getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
     }
     private void updateThumbnails(){
-
+        /*
         String how_to_sort = Utility.getHowToSort(getActivity());
 
-        Intent intent = new Intent(getActivity(), PopularMoviesService.class);
-        intent.putExtra(PopularMoviesService.SORT_EXTRA,
-                how_to_sort);
-        getActivity().startService(intent);
+        Intent alarmIntent = new Intent(getActivity(), PopularMoviesService.AlarmReceiver.class);
+        alarmIntent.putExtra(PopularMoviesService.SORT_EXTRA, how_to_sort);
+        PendingIntent pi = PendingIntent.getBroadcast(getActivity(),0,alarmIntent,PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager am = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+        */
+        PopularMoviesSyncAdapter.syncImmediately(getActivity());
     }
     /*
     @Override

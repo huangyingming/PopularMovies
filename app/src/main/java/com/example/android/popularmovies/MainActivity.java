@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
+
 public class MainActivity extends AppCompatActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private final String THUMBNAILFRAGMENT_TAG = "TFTAG";
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new ThumbnailFragment(), THUMBNAILFRAGMENT_TAG)
                     .commit();
         }
+        PopularMoviesSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
