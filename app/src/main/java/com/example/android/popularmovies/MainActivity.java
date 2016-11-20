@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,17 +20,17 @@ public class MainActivity extends AppCompatActivity implements ThumbnailFragment
         mSort = Utility.getHowToSort(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(findViewById(R.id.movie_detail_container) != null){
+        if(findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
-            if(savedInstanceState == null){
+            if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_container,
                                 new DetailFragment(),
                                 DETAILFRAGMENT_TAG).commit();
             }
-            else{
-                mTwoPane = false;
-            }
+        }
+        else{
+            mTwoPane = false;
         }
         PopularMoviesSyncAdapter.initializeSyncAdapter(this);
     }

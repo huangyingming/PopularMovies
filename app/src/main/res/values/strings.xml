@@ -19,4 +19,7 @@
     <string name="no_reviews">No reviews for this movie</string>
     <string name="make_as_favorite">Make as favorite</string>
     <string name="unfavorite">Remove from favorites</string>
+    <string name="vote_average">%1$s/10</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
 </resources>

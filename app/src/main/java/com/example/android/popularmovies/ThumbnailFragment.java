@@ -25,6 +25,8 @@ import android.widget.GridView;
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
+import static com.example.android.popularmovies.R.id.gridview;
+
 /**
  * Created by aaa on 2016/08/17.
  */
@@ -48,6 +50,9 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     static final int COL_VOTE_AVERAGE = 5;
     static final int COL_THUMBNAIL = 6;
     private MovieAdapter mMovieAdapter;
+    private GridView mGridView;
+    private int mPosition = GridView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
 
     public interface Callback {
         public void onItemSelected(Uri uri);
@@ -95,12 +100,12 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
 
         mMovieAdapter = new MovieAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-        gridview.setAdapter(mMovieAdapter);
+        mGridView = (GridView) rootView.findViewById(gridview);
+        mGridView.setAdapter(mMovieAdapter);
 
 
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view,
                                     int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -112,14 +117,13 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
                         uri = MovieContract.MovieEntry.buildMovieUri(cursor.getLong(COL_ID));
                     }
                     ((Callback) getActivity()).onItemSelected(uri);
-                    //Intent intent = new Intent(getActivity(), DetailActivity.class).setData(uri);
-                    //startActivity(intent);
-
-
                 }
-
+                mPosition = position;
             }
         });
+        if(savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)){
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
 
         return rootView;
     }
@@ -140,12 +144,13 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
 
         PopularMoviesSyncAdapter.syncImmediately(getActivity());
     }
-    /*
     @Override
-    public void onStart(){
-        super.onStart();
-        updateThumbnails();
-    }*/
+    public void onSaveInstanceState(Bundle outState){
+        if(mPosition != GridView.INVALID_POSITION){
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle){
 
@@ -168,6 +173,9 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor){
         mMovieAdapter.swapCursor(cursor);
+        if(mPosition != GridView.INVALID_POSITION){
+            mGridView.smoothScrollToPosition(mPosition);
+        }
     }
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader){

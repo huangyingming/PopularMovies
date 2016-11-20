@@ -134,7 +134,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Picasso.with(getActivity()).load(thumbnail).into(mImageView);
 
         mOverviewView.setText(overview);
-        mVoteAverageView.setText(vote_average);
+        mVoteAverageView.setText(getActivity().getString(R.string.vote_average, vote_average));
         mReleaseDateView.setText(year);
 
         if(Utility.isOnline(getActivity())){
