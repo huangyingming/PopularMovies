@@ -7,10 +7,16 @@
     <string name="pref_sort_label">Sort By</string>
     <string name="pref_sort_label_popular">Popular</string>
     <string name="pref_sort_label_top_rated">Top-rated</string>
+    <string name="pref_sort_label_favorite">Favorite</string>
     <string name="pref_sort_key" translatable="false">sort</string>
     <string name="pref_sort_popular" translatable="false">popular</string>
     <string name="pref_sort_top_rated" translatable="false">top_rated</string>
+    <string name="pref_sort_favorite" translatable="false">favorite</string>
     <string name="movie_image" translatable="false">Image</string>
     <string name="sync_account_type">popularmovies.example.com</string>
     <string name="content_authority">com.example.android.popularmovies</string>
+    <string name="no_trailers">No trailers for this movie</string>
+    <string name="no_reviews">No reviews for this movie</string>
+    <string name="make_as_favorite">Make as favorite</string>
+    <string name="unfavorite">Remove from favorites</string>
 </resources>

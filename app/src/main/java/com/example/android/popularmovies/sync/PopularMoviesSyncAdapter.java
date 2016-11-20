@@ -159,7 +159,7 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
                 getContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, null, null);
                 getContext().getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, cvArray);
             }
-            Log.d(LOG_TAG, "PopularMoviesService. " + cVVector.size() + " Inserted");
+            Log.d(LOG_TAG, "PopularMoviesSyncAdapter. "+ cVVector.size() + " Inserted");
 
 
         }catch(JSONException e) {

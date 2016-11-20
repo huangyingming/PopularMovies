@@ -42,6 +42,8 @@
             android:name=".data.MovieProvider"
             android:exported="false"
             android:syncable="true" />
+        <service android:name=".service.FetchTrailerService"/>
+        <service android:name=".service.FetchReviewService" />
 
         <service
             android:name=".sync.PopularMoviesAuthenticatorService"

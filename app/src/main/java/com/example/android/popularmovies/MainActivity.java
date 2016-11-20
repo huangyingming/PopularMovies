@@ -1,27 +1,37 @@
 package com.example.android.popularmovies;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ThumbnailFragment.Callback{
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final String THUMBNAILFRAGMENT_TAG = "TFTAG";
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private String mSort;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mSort = Utility.getHowToSort(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ThumbnailFragment(), THUMBNAILFRAGMENT_TAG)
-                    .commit();
+        if(findViewById(R.id.movie_detail_container) != null){
+            mTwoPane = true;
+            if(savedInstanceState == null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container,
+                                new DetailFragment(),
+                                DETAILFRAGMENT_TAG).commit();
+            }
+            else{
+                mTwoPane = false;
+            }
         }
         PopularMoviesSyncAdapter.initializeSyncAdapter(this);
     }
@@ -54,12 +64,38 @@ public class MainActivity extends AppCompatActivity {
         String how_to_sort = Utility.getHowToSort(this);
         if(how_to_sort != null && !how_to_sort.equals(mSort)){
             ThumbnailFragment tf = (ThumbnailFragment)getSupportFragmentManager()
-                    .findFragmentByTag(THUMBNAILFRAGMENT_TAG);
+                    .findFragmentById(R.id.fragment_thumbnail);
             if(null != tf){
                 tf.onSortChanged();
             }
+            /*
+            DetailFragment df = (DetailFragment)getSupportFragmentManager()
+                    .findFragmentByTag(DETAILFRAGMENT_TAG);
+            if(null != df){
+                df.onSortChanged();
+            }
+            */
             mSort = how_to_sort;
         }
+    }
+    @Override
+    public void onItemSelected(Uri contentUri){
+        if(mTwoPane){
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment,
+                            DETAILFRAGMENT_TAG).commit();
+        }else{
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
+        }
+
     }
 
 }

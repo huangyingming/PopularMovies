@@ -1,6 +1,9 @@
 package com.example.android.popularmovies;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,15 +49,30 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     static final int COL_THUMBNAIL = 6;
     private MovieAdapter mMovieAdapter;
 
-
+    public interface Callback {
+        public void onItemSelected(Uri uri);
+    }
     public ThumbnailFragment() {
     }
     @Override
     public void onCreate(Bundle savedInstanceState){
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mFavoriteDeleteReceiver,
+                new IntentFilter("favorite_delete"));
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
-
+    private BroadcastReceiver mFavoriteDeleteReceiver = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context context, Intent intent){
+            getLoaderManager().restartLoader(MOVIE_LOADER, null, ThumbnailFragment.this);
+        }
+    };
+    @Override
+    public void onDestroyView(){
+        Log.d("Debugging", "onDestroyView()");
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mFavoriteDeleteReceiver);
+        super.onDestroyView();
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.thumbnailfragment, menu);
@@ -86,10 +105,15 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
                                     int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if(cursor != null){
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(MovieContract.MovieEntry.buildMovieUri(
-                                    cursor.getLong(COL_ID)));
-                    startActivity(intent);
+                    Uri uri;
+                    if(Utility.getHowToSort(getActivity()).equals("favorite")){
+                        uri = MovieContract.FavoriteEntry.buildFavoriteUri(cursor.getLong(COL_ID));
+                    }else{
+                        uri = MovieContract.MovieEntry.buildMovieUri(cursor.getLong(COL_ID));
+                    }
+                    ((Callback) getActivity()).onItemSelected(uri);
+                    //Intent intent = new Intent(getActivity(), DetailActivity.class).setData(uri);
+                    //startActivity(intent);
 
 
                 }
@@ -106,19 +130,14 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
         super.onActivityCreated(savedInstanceState);
     }
     void onSortChanged(){
-        updateThumbnails();
+        if(!Utility.getHowToSort(getActivity()).equals("favorite")){
+            updateThumbnails();
+        }
         getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
+
     }
     private void updateThumbnails(){
-        /*
-        String how_to_sort = Utility.getHowToSort(getActivity());
 
-        Intent alarmIntent = new Intent(getActivity(), PopularMoviesService.AlarmReceiver.class);
-        alarmIntent.putExtra(PopularMoviesService.SORT_EXTRA, how_to_sort);
-        PendingIntent pi = PendingIntent.getBroadcast(getActivity(),0,alarmIntent,PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager am = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
-        */
         PopularMoviesSyncAdapter.syncImmediately(getActivity());
     }
     /*
@@ -148,13 +167,13 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     }
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor){
-        Log.d("ThumbnailFragment", "Debugging onLoadFinished called");
         mMovieAdapter.swapCursor(cursor);
     }
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader){
         mMovieAdapter.swapCursor(null);
     }
+
 
 
 }

@@ -16,7 +16,7 @@ public class Utility {
                 context.getString(R.string.pref_sort_popular));
     }
 
-    public boolean isOnline(Context context) {
+    public static boolean isOnline(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
