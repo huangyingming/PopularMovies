@@ -86,10 +86,10 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
-        if(id == R.id.action_refresh){
-            updateThumbnails();
-            return true;
-        }
+        //if(id == R.id.action_refresh){
+        //updateThumbnails();
+        //    return true;
+        //}
         return super.onOptionsItemSelected(item);
 
     }

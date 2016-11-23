@@ -25,8 +25,6 @@ public class MovieContract {
     public static final String PATH_MOVIE = "movie";
 
     public static final String PATH_FAVORITE = "favorite";
-    public static final String PATH_TRAILER = "Trailer";
-    public static final String PATH_REVIEW = "review";
 
     public static class MovieEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
@@ -69,39 +67,4 @@ public class MovieContract {
         }
     }
 
-    public static class TrailerEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRAILER).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRAILER;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRAILER;
-
-        public static final String TABLE_NAME = "Trailer";
-        public static final String COLUMN_MOVIE_ID = "movie_id";
-        public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_YOUTUBE_KEY = "youtube_key";
-
-        public static Uri buildTrailerUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
-    }
-
-    public static class ReviewEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REVIEW).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;
-
-        public static final String TABLE_NAME = "review";
-        public static final String COLUMN_MOVIE_ID = "movie_id";
-        public static final String COLUMN_AUTHOR = "author";
-        public static final String COLUMN_CONTENT = "content";
-
-        public static Uri buildReviewUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
-    }
 }
