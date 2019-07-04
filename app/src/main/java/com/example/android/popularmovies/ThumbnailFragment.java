@@ -30,7 +30,7 @@ import static com.example.android.popularmovies.R.id.gridview;
 /**
  * Created by aaa on 2016/08/17.
  */
-public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int MOVIE_LOADER = 0;
 
     private static final String[] MOVIE_COLUMNS = {
@@ -60,7 +60,7 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     public ThumbnailFragment() {
     }
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mFavoriteDeleteReceiver,
                 new IntentFilter("favorite_delete"));
         super.onCreate(savedInstanceState);
@@ -73,18 +73,18 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
         }
     };
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         Log.d("Debugging", "onDestroyView()");
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mFavoriteDeleteReceiver);
         super.onDestroyView();
     }
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.thumbnailfragment, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         //if(id == R.id.action_refresh){
         //updateThumbnails();
@@ -109,7 +109,7 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
             public void onItemClick(AdapterView<?> adapterView, View view,
                                     int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if(cursor != null){
+                if (cursor != null) {
                     Uri uri;
                     if(Utility.getHowToSort(getActivity()).equals("favorite")){
                         uri = MovieContract.FavoriteEntry.buildFavoriteUri(cursor.getLong(COL_ID));
@@ -121,7 +121,7 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
                 mPosition = position;
             }
         });
-        if(savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)){
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
 
@@ -129,38 +129,38 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
-    void onSortChanged(){
-        if(!Utility.getHowToSort(getActivity()).equals("favorite")){
+    void onSortChanged() {
+        if (!Utility.getHowToSort(getActivity()).equals("favorite")) {
             updateThumbnails();
         }
         getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
 
     }
-    private void updateThumbnails(){
+    private void updateThumbnails() {
 
         PopularMoviesSyncAdapter.syncImmediately(getActivity());
     }
     @Override
-    public void onSaveInstanceState(Bundle outState){
-        if(mPosition != GridView.INVALID_POSITION){
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPosition != GridView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
         super.onSaveInstanceState(outState);
     }
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle){
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
         String how_to_sort = Utility.getHowToSort(getActivity());
 
         String sortOrder = MovieContract.MovieEntry._ID + " ASC";
         Uri uri;
-        if(how_to_sort.equals("favorite")){
+        if (how_to_sort.equals("favorite")) {
             uri = MovieContract.FavoriteEntry.CONTENT_URI;
-        }else{
+        } else {
             uri = MovieContract.MovieEntry.CONTENT_URI;
         }
         return new CursorLoader(getActivity(),
@@ -171,9 +171,9 @@ public class ThumbnailFragment extends Fragment implements LoaderManager.LoaderC
                 sortOrder);
     }
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor){
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mMovieAdapter.swapCursor(cursor);
-        if(mPosition != GridView.INVALID_POSITION){
+        if (mPosition != GridView.INVALID_POSITION) {
             mGridView.smoothScrollToPosition(mPosition);
         }
     }

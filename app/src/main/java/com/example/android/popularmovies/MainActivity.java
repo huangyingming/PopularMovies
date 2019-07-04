@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
-public class MainActivity extends AppCompatActivity implements ThumbnailFragment.Callback{
+public class MainActivity extends AppCompatActivity implements ThumbnailFragment.Callback {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private String mSort;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailFragment
                                 DETAILFRAGMENT_TAG).commit();
             }
         }
-        else{
+        else {
             mTwoPane = false;
         }
         PopularMoviesSyncAdapter.initializeSyncAdapter(this);
@@ -63,13 +63,13 @@ public class MainActivity extends AppCompatActivity implements ThumbnailFragment
         return super.onOptionsItemSelected(item);
     }
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         String how_to_sort = Utility.getHowToSort(this);
-        if(how_to_sort != null && !how_to_sort.equals(mSort)){
+        if (how_to_sort != null && !how_to_sort.equals(mSort)) {
             ThumbnailFragment tf = (ThumbnailFragment)getSupportFragmentManager()
                     .findFragmentById(R.id.fragment_thumbnail);
-            if(null != tf){
+            if (null != tf) {
                 tf.onSortChanged();
             }
             /*
@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements ThumbnailFragment
         }
     }
     @Override
-    public void onItemSelected(Uri contentUri){
-        if(mTwoPane){
+    public void onItemSelected(Uri contentUri) {
+        if (mTwoPane) {
             Bundle args = new Bundle();
             args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailFragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, fragment,
                             DETAILFRAGMENT_TAG).commit();
-        }else{
+        } else {
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(contentUri);
             startActivity(intent);

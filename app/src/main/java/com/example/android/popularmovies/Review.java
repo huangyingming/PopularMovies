@@ -21,7 +21,7 @@ public class Review implements Parcelable {
         return 0;
     }
     @Override
-    public void writeToParcel(Parcel dest, int flags){
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mMovieId);
         dest.writeString(this.mAuthor);
         dest.writeString(this.mContent);
@@ -37,7 +37,7 @@ public class Review implements Parcelable {
                     return new Review[i];
                 }
             };
-    public Review(int movieId, String youtubeKey, String name){
+    public Review(int movieId, String youtubeKey, String name) {
         this.mMovieId = movieId;
         this.mAuthor = youtubeKey;
         this.mContent = name;

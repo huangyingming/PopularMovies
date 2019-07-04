@@ -38,7 +38,7 @@ public class Trailer implements Parcelable {
                     return new Trailer[i];
                 }
     };
-    public Trailer(int movieId, String youtubeKey, String name){
+    public Trailer(int movieId, String youtubeKey, String name) {
         this.mMovieId = movieId;
         this.mYoutubeKey = youtubeKey;
         this.mName = name;

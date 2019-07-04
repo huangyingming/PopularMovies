@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by aaa on 2016/10/15.
  */
-public class MovieAdapter extends CursorAdapter{
+public class MovieAdapter extends CursorAdapter {
     private Context mContext;
 
     public static class ViewHolder {

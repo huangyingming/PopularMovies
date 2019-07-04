@@ -2,11 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "com.example.android.popularmovies"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -18,7 +17,7 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', "\"5e8745733aec8b37244a7443988051af\""
+        it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', "\"apikey\""
     }
 }
 repositories {
@@ -27,8 +26,15 @@ repositories {
 
 }
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
 }

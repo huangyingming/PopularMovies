@@ -27,7 +27,7 @@ public class MovieProvider extends ContentProvider {
 
 
 
-    static UriMatcher buildUriMatcher(){
+    static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
@@ -40,15 +40,15 @@ public class MovieProvider extends ContentProvider {
         return matcher;
     }
     @Override
-    public boolean onCreate(){
+    public boolean onCreate() {
         mOpenHelper = new MovieDbHelper(getContext());
         return true;
     }
     @Override
-    public String getType(Uri uri){
+    public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
 
-        switch(match){
+        switch (match) {
             case MOVIE:
                 return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_WITH_ID:
@@ -66,9 +66,9 @@ public class MovieProvider extends ContentProvider {
     }
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder ){
+                        String sortOrder ) {
         Cursor retCursor;
-        switch(sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case MOVIE: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
@@ -163,12 +163,12 @@ public class MovieProvider extends ContentProvider {
         return returnUri;
     }
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs){
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
-        if(null == selection) selection = "1";
-        switch(match){
+        if (null == selection) selection = "1";
+        switch (match) {
             case MOVIE:
                 rowsDeleted = db.delete(
                         MovieContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
@@ -196,19 +196,19 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         // Because a null deletes all rows
-        if(rowsDeleted != 0){
+        if (rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
     }
     @Override
     public int update(
-            Uri uri, ContentValues values, String selection, String[] selectionArgs){
+            Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
 
-        switch(match){
+        switch (match) {
             case MOVIE:
                 rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values, selection,
                         selectionArgs);
@@ -232,18 +232,18 @@ public class MovieProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if(rowsUpdated != 0){
+        if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
     }
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values){
+    public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         String tableName;
 
-        switch(match){
+        switch (match) {
             case MOVIE:
                 tableName = MovieContract.MovieEntry.TABLE_NAME;
                 break;
@@ -255,15 +255,15 @@ public class MovieProvider extends ContentProvider {
         }
         db.beginTransaction();
         int returnCount = 0;
-        try{
-            for(ContentValues value : values){
+        try {
+            for (ContentValues value : values) {
                 long _id = db.insert(tableName, null, value);
-                if(_id != -1){
+                if (_id != -1) {
                     returnCount++;
                 }
             }
             db.setTransactionSuccessful();
-        }finally{
+        } finally {
             db.endTransaction();
         }
         getContext().getContentResolver().notifyChange(uri, null);

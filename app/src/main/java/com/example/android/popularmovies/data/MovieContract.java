@@ -42,7 +42,7 @@ public class MovieContract {
         public static final String COLUMN_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_THUMBNAIL = "thumbnail";
 
-        public static Uri buildMovieUri(long id){
+        public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
@@ -61,7 +61,7 @@ public class MovieContract {
         public static Uri buildFavoriteUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-        public static Uri buildFavoriteUriWithMovieId(int movieId){
+        public static Uri buildFavoriteUriWithMovieId(int movieId) {
             Uri tmp =  CONTENT_URI.buildUpon().appendPath("movie_id").build();
             return ContentUris.withAppendedId(tmp, (long) movieId);
         }

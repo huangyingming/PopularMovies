@@ -88,11 +88,11 @@ public class FetchTrailerService extends IntentService {
             // If the code didn't successfully get the weather data, there's no point in attemping
             // to parse it.
 
-        } catch (JSONException e){
+        } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
 
-        }finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -122,7 +122,7 @@ public class FetchTrailerService extends IntentService {
             //Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArray.length());
             ArrayList<Trailer> trailers = new ArrayList<Trailer>();
 
-            for(int i = 0; i < trailerArray.length(); i++){
+            for (int i = 0; i < trailerArray.length(); i++) {
                 JSONObject trailerInfo = trailerArray.getJSONObject(i);
 
                 String youtubeKey = trailerInfo.getString(TMD_YOUTUBE_KEY);
@@ -149,7 +149,7 @@ public class FetchTrailerService extends IntentService {
             Log.d(LOG_TAG, "FetchTrailerService. " + trailers.size() + " Broadcasted");
 
 
-        }catch(JSONException e) {
+        } catch(JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }

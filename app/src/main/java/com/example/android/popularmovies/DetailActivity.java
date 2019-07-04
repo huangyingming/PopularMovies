@@ -9,7 +9,7 @@ import android.view.MenuItem;
 /**
  * Created by aaa on 2016/08/21.
  */
-public class DetailActivity extends ActionBarActivity{
+public class DetailActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

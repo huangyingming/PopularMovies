@@ -91,19 +91,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return rootView;
     }
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
     void onSortChanged(){
-        if(mUri != null){
+        if(mUri != null) {
             getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
             Log.d("Debugging", "restartLoader");
         }
     }
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args){
-        if(null != mUri){
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (null != mUri) {
             return new CursorLoader(
                     getActivity(),
                     mUri,
@@ -117,7 +117,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return null;
     }
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data){
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v(LOG_TAG, "In onLoadFinished");
         if (!data.moveToFirst()) { return; }
 
@@ -137,7 +137,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mVoteAverageView.setText(getActivity().getString(R.string.vote_average, vote_average));
         mReleaseDateView.setText(year);
 
-        if(Utility.isOnline(getActivity())){
+        if (Utility.isOnline(getActivity())) {
             Intent trailerIntent = new Intent(getActivity(), FetchTrailerService.class);
             trailerIntent.putExtra(FetchTrailerService.MOVIE_ID_EXTRA,
                     movieId);
@@ -153,16 +153,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mHowToSort = Utility.getHowToSort(getActivity());
         mMakeAsFavorite = isMakeAsFavorite(data.getInt(COL_MOVIE_ID));
         mButton.setTag(data);
-        if(mMakeAsFavorite){
+        if (mMakeAsFavorite) {
             mButton.setText(getActivity().getString(R.string.make_as_favorite));
-        }else{
+        } else {
             mButton.setText(getActivity().getString(R.string.unfavorite));
         }
         mButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Button button = (Button) v;
                 Cursor data = (Cursor)button.getTag();
-                if(mMakeAsFavorite){
+                if (mMakeAsFavorite) {
                     ContentValues movieValues = new ContentValues();
                     DatabaseUtils.cursorRowToContentValues(data, movieValues);
                     movieValues.remove(MovieContract.MovieEntry._ID);
@@ -170,7 +170,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                             movieValues);
                     button.setText(getActivity().getString(R.string.unfavorite));
                     mMakeAsFavorite = false;
-                }else{
+                } else {
                     int movieId = data.getInt(COL_MOVIE_ID);
                     Uri uri = MovieContract.FavoriteEntry.buildFavoriteUriWithMovieId(movieId);
                     getActivity().getContentResolver().delete(
@@ -179,11 +179,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                             null);
 
 
-                    if(mHowToSort.equals("favorite")){
+                    if (mHowToSort.equals("favorite")) {
                         Intent intent = new Intent("favorite_delete");
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
                         button.setEnabled(false);
-                    }else{
+                    } else {
                         button.setText(getActivity().getString(R.string.make_as_favorite));
                         mMakeAsFavorite = true;
                     }
@@ -191,8 +191,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
     }
-    private boolean isMakeAsFavorite(int movieId){
-        if(mHowToSort.equals("favorite")){
+    private boolean isMakeAsFavorite(int movieId) {
+        if (mHowToSort.equals("favorite")) {
             return false;
         }
         Cursor c = getActivity().getContentResolver().query(
@@ -207,10 +207,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return result;
     }
     @Override
-    public void onLoaderReset(Loader<Cursor> loader){}
+    public void onLoaderReset(Loader<Cursor> loader) {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTrailerReceiver,
                 new IntentFilter("send_trailers"));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReviewReceiver,
@@ -234,15 +234,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             createReviewView(reviews);
         }
     };
-    private void createTrailerView(ArrayList<Trailer> trailers){
-        if(trailers == null|| trailers.size() == 0){
+    private void createTrailerView(ArrayList<Trailer> trailers) {
+        if (trailers == null|| trailers.size() == 0) {
             TextView noTrailers = new TextView(getActivity());
             noTrailers.setText(getActivity().getString(R.string.no_trailers));
             mTrailersView.addView(noTrailers);
             return;
         }
         LinearLayout trailerView;
-        for(Trailer trailer : trailers){
+        for (Trailer trailer : trailers) {
             trailerView = (LinearLayout)LayoutInflater.from(getActivity()).inflate(R.layout.list_item_trailer,
                     mTrailersView, false);
             ((TextView)trailerView.findViewById(R.id.trailer_name)).setText(trailer.mName);
@@ -264,14 +264,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
     private void createReviewView(ArrayList<Review> reviews){
-        if(reviews == null|| reviews.size() == 0){
+        if (reviews == null|| reviews.size() == 0) {
             TextView noReviews = new TextView(getActivity());
             noReviews.setText(getActivity().getString(R.string.no_reviews));
             mReviewsView.addView(noReviews);
             return;
         }
         LinearLayout reviewView;
-        for(Review review : reviews){
+        for (Review review : reviews) {
             reviewView = (LinearLayout)LayoutInflater.from(getActivity()).inflate(R.layout.list_item_review,
                     mReviewsView, false);
             ((TextView)reviewView.findViewById(R.id.author)).setText(review.mAuthor);
@@ -280,7 +280,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
     @Override
-    public void onStop(){
+    public void onStop() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTrailerReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReviewReceiver);
         super.onStop();

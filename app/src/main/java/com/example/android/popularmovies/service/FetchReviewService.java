@@ -85,11 +85,11 @@ public class FetchReviewService extends IntentService {
             // If the code didn't successfully get the weather data, there's no point in attemping
             // to parse it.
 
-        } catch (JSONException e){
+        } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
 
-        }finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -118,7 +118,7 @@ public class FetchReviewService extends IntentService {
             JSONArray reviewArray = reviewJson.getJSONArray(TMD_RESULTS);
             ArrayList<Review> reviews = new ArrayList<Review>();
 
-            for(int i = 0; i < reviewArray.length(); i++){
+            for (int i = 0; i < reviewArray.length(); i++) {
                 JSONObject reviewInfo = reviewArray.getJSONObject(i);
 
                 String author = reviewInfo.getString(TMD_AUTHOR);
@@ -145,7 +145,7 @@ public class FetchReviewService extends IntentService {
             Log.d(LOG_TAG, "FetchReviewService. " + reviews.size() + " Broadcasted");
 
 
-        }catch(JSONException e) {
+        } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
